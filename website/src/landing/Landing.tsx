@@ -131,7 +131,7 @@ export const Landing = () => (
             Passes the official conformance suites. MIT licensed. Pure Haskell, no C libraries.
           </p>
         </div>
-        <pre class={s.heroCode}>
+        <pre class={s.heroCode} tabIndex={0}>
           <span class="file">Main.hs</span>
           <code dangerouslySetInnerHTML={{ __html: highlight("haskell", sample) }} />
         </pre>

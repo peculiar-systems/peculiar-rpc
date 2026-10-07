@@ -8,7 +8,7 @@ order: 1
 
 A service, a server and a client, from a `.proto` file.
 
-> **Preview.** peculiar-rpc isn't on Hackage yet; take it from GitHub as a flake. Everything below works as written. The package names are `peculiar-rpc` and, for the pure wire formats, `peculiar-rpc-core`.
+> **Beta.** peculiar-rpc isn't on Hackage yet; take it from GitHub as a flake. Everything below works as written. The package names are `peculiar-rpc` and, for the pure wire formats, `peculiar-rpc-core`.
 
 ## 1. Write the contract
 

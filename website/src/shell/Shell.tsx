@@ -14,7 +14,7 @@ export const Header = () => (
         </a>
         <span class={s.status}>
           <span class={s.statusDot} aria-hidden="true" />
-          Preview
+          Beta
         </span>
         <a class={s.navLink} href="/docs/protocols">
           Protocols
@@ -44,6 +44,20 @@ export const Footer = () => (
         {" · "}
         <a class={s.footerLink} href="/docs/conformance">
           Conformance
+        </a>
+      </span>
+      <span>
+        A peculiar product ·{" "}
+        <a class={s.footerLink} href="https://peculiar.systems/privacy">
+          Privacy
+        </a>
+        {" · "}
+        <a class={s.footerLink} href="https://peculiar.systems/terms">
+          Terms
+        </a>
+        {" · "}
+        <a class={s.footerLink} href="https://peculiar.systems/refunds">
+          Refunds
         </a>
         {" · "}
         <a class={s.footerLink} href="https://peculiar.systems">

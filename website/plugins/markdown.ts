@@ -37,7 +37,7 @@ const marked = new Marked({
       const [language = "", ...caption] = (lang ?? "").trim().split(/\s+/u);
       const file =
         caption.length === 0 ? "" : `<span class="file">${escape(caption.join(" "))}</span>`;
-      return `<pre>${file}<code>${highlight(language, text)}</code></pre>\n`;
+      return `<pre tabindex="0">${file}<code>${highlight(language, text)}</code></pre>\n`;
     },
   },
 });
