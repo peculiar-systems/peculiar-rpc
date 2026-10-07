@@ -1,0 +1,96 @@
+cabal-version:      3.0
+name:               peculiar-rpc-core
+version:            0.3.0.0
+synopsis:           The wire formats of gRPC, gRPC-Web and Connect, as values
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Network
+build-type:         Simple
+
+common lang
+    default-language: GHC2021
+    default-extensions:
+        DerivingStrategies
+        DerivingVia
+        DeriveAnyClass
+        GeneralizedNewtypeDeriving
+        LambdaCase
+        MultiWayIf
+        BlockArguments
+        ViewPatterns
+        PatternSynonyms
+        QuasiQuotes
+        ApplicativeDo
+        OverloadedStrings
+        OverloadedLabels
+        OverloadedRecordDot
+        DuplicateRecordFields
+        NoFieldSelectors
+        RecordWildCards
+        NamedFieldPuns
+        TypeFamilies
+        DataKinds
+        FunctionalDependencies
+        UndecidableInstances
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wmissing-export-lists
+        -Wmissing-home-modules
+        -Wmissing-deriving-strategies
+        -Wpartial-fields
+        -Wredundant-constraints
+        -Woperator-whitespace
+        -Wredundant-bang-patterns
+        -Wunused-type-patterns
+        -Wunused-packages
+
+library
+    import:           lang
+    hs-source-dirs:   src
+    exposed-modules:
+        Peculiar.Rpc.Core.Base64
+        Peculiar.Rpc.Core.Client
+        Peculiar.Rpc.Core.Code
+        Peculiar.Rpc.Core.Codec
+        Peculiar.Rpc.Core.Connect
+        Peculiar.Rpc.Core.Cors
+        Peculiar.Rpc.Core.Frame
+        Peculiar.Rpc.Core.Headers
+        Peculiar.Rpc.Core.Response
+        Peculiar.Rpc.Core.Status
+        Peculiar.Rpc.Core.Timeout
+        Peculiar.Rpc.Core.Trailers
+        Peculiar.Rpc.Core.Wire
+    build-depends:
+        aeson >=2.1 && <2.3,
+        base >=4.17 && <5,
+        base64-bytestring >=1.2 && <1.3,
+        bytestring >=0.11 && <0.13,
+        containers >=0.6 && <0.8,
+        deriving-aeson >=0.2 && <0.3,
+        http-types >=0.12 && <0.13,
+        text >=2.0 && <2.2
+
+test-suite peculiar-rpc-core-test
+    import:           lang
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    other-modules:
+        Test.Peculiar.Rpc.Core.Base64
+        Test.Peculiar.Rpc.Core.Connect
+        Test.Peculiar.Rpc.Core.Frame
+        Test.Peculiar.Rpc.Core.Gen
+        Test.Peculiar.Rpc.Core.Response
+        Test.Peculiar.Rpc.Core.Status
+        Test.Peculiar.Rpc.Core.Timeout
+        Test.Peculiar.Rpc.Core.Wire
+    build-depends:
+        base,
+        bytestring,
+        hedgehog,
+        peculiar-rpc-core

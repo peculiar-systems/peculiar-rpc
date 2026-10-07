@@ -1,0 +1,113 @@
+cabal-version:      3.0
+name:               peculiar-rpc-json
+version:            0.3.0.0
+synopsis:           The proto3 JSON mapping for proto-lens messages
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Network
+build-type:         Simple
+
+common lang
+    default-language: GHC2021
+    default-extensions:
+        DerivingStrategies
+        DerivingVia
+        DeriveAnyClass
+        GeneralizedNewtypeDeriving
+        LambdaCase
+        MultiWayIf
+        BlockArguments
+        ViewPatterns
+        PatternSynonyms
+        QuasiQuotes
+        ApplicativeDo
+        OverloadedStrings
+        OverloadedLabels
+        OverloadedRecordDot
+        DuplicateRecordFields
+        NoFieldSelectors
+        RecordWildCards
+        NamedFieldPuns
+        TypeFamilies
+        DataKinds
+        FunctionalDependencies
+        UndecidableInstances
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wmissing-export-lists
+        -Wmissing-home-modules
+        -Wmissing-deriving-strategies
+        -Wpartial-fields
+        -Wredundant-constraints
+        -Woperator-whitespace
+        -Wredundant-bang-patterns
+        -Wunused-type-patterns
+        -Wunused-packages
+
+library
+    import:           lang
+    hs-source-dirs:   src
+    exposed-modules:
+        Peculiar.Rpc.Json
+        Peculiar.Rpc.Json.Access
+        Peculiar.Rpc.Json.Decode
+        Peculiar.Rpc.Json.Encode
+        Peculiar.Rpc.Json.Error
+        Peculiar.Rpc.Json.Parse
+        Peculiar.Rpc.Json.Plan
+        Peculiar.Rpc.Json.Scalar
+        Peculiar.Rpc.Json.Time
+    build-depends:
+        aeson,
+        base >=4.17 && <5,
+        base64-bytestring,
+        bytestring,
+        containers,
+        lens-family,
+        proto-lens,
+        proto-lens-protobuf-types,
+        scientific,
+        text,
+        time,
+        vector
+
+library conformance-proto
+    hs-source-dirs:   gen
+    default-language: GHC2021
+    exposed-modules:
+        Proto.Conformance.Conformance
+        Proto.Conformance.Conformance_Fields
+        Proto.Google.Protobuf.TestMessagesProto2
+        Proto.Google.Protobuf.TestMessagesProto2_Fields
+        Proto.Google.Protobuf.TestMessagesProto3
+        Proto.Google.Protobuf.TestMessagesProto3_Fields
+    build-depends:
+        base >=4.17 && <5,
+        proto-lens-protobuf-types,
+        proto-lens-runtime
+
+library conformance
+    import:           lang
+    hs-source-dirs:   conformance
+    exposed-modules:
+        Peculiar.Rpc.Json.Conformance
+    build-depends:
+        base >=4.17 && <5,
+        bytestring,
+        lens-family,
+        peculiar-rpc-json,
+        peculiar-rpc-json:conformance-proto,
+        proto-lens,
+        text
+
+executable peculiar-rpc-json-conformance
+    import:           lang
+    hs-source-dirs:   app
+    main-is:          Conformance.hs
+    build-depends:
+        base,
+        peculiar-rpc-json:conformance

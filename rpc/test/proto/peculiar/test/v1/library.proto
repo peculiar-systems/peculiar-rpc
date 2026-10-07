@@ -1,0 +1,119 @@
+syntax = "proto3";
+
+package peculiar.test.v1;
+
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+// A small book catalogue, served over REST as well as RPC.
+service Library {
+  // Fetches one book by its resource name.
+  rpc GetBook(GetBookRequest) returns (Book) {
+    option (google.api.http) = {get: "/v1/{name=shelves/*/books/*}"};
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+
+  // Lists the books on a shelf.
+  rpc ListBooks(ListBooksRequest) returns (ListBooksResponse) {
+    option (google.api.http) = {get: "/v1/shelves/{shelf}/books"};
+  }
+
+  // Adds a book to a shelf.
+  rpc CreateBook(CreateBookRequest) returns (Book) {
+    option (google.api.http) = {
+      post: "/v1/shelves/{shelf}/books"
+      body: "book"
+    };
+  }
+
+  // Gives a book a new title.
+  rpc RenameBook(RenameBookRequest) returns (Book) {
+    option (google.api.http) = {
+      patch: "/v1/{name=shelves/*/books/*}:rename"
+      body: "*"
+    };
+  }
+
+  // Removes a book.
+  rpc DeleteBook(DeleteBookRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/v1/{name=shelves/*/books/*}"};
+  }
+}
+
+// A book on a shelf.
+message Book {
+  option (buf.validate.message).cel = {
+    id: "book.tags_within_pages"
+    message: "a book cannot carry more tags than it has pages"
+    expression: "this.pages == 0 || size(this.tags) <= this.pages"
+  };
+
+  // The resource name, shelves/{shelf}/books/{book}.
+  string name = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+  // The title on the cover.
+  string title = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 200
+    }
+  ];
+  int64 pages = 3 [(buf.validate.field).int64 = {
+    gte: 0
+    lte: 10000
+  }];
+  bool available = 4;
+  repeated string tags = 5 [(buf.validate.field).repeated = {
+    max_items: 5
+    items: {
+      string: {min_len: 1}
+    }
+  }];
+  string contact = 6 [
+    (buf.validate.field).string.email = true,
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE
+  ];
+  string isbn = 7 [
+    (buf.validate.field).string.pattern = "^[0-9]{13}$",
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE
+  ];
+  google.protobuf.Timestamp due = 8 [(buf.validate.field).timestamp.gt_now = true];
+}
+
+message GetBookRequest {
+  string name = 1;
+}
+
+message ListBooksRequest {
+  string shelf = 1;
+  int32 page_size = 2 [(buf.validate.field).int32.lte = 100];
+  bool available_only = 3;
+  repeated string tags = 4;
+}
+
+message ListBooksResponse {
+  repeated Book books = 1;
+}
+
+message CreateBookRequest {
+  option (buf.validate.message).cel = {
+    id: "create_book.vault_divisor"
+    message: "the vault shelf cannot be divided"
+    expression: "this.shelf != 'vault' || 1 / (size(this.shelf) - 5) > 0"
+  };
+
+  string shelf = 1;
+  Book book = 2 [(buf.validate.field).required = true];
+}
+
+message RenameBookRequest {
+  string name = 1;
+  string title = 2;
+}
+
+message DeleteBookRequest {
+  string name = 1;
+}

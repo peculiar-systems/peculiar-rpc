@@ -1,0 +1,119 @@
+cabal-version:      3.0
+name:               peculiar-rpc-interop
+version:            0.1.0.0
+synopsis:           The gRPC interop test cases for peculiar-rpc
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Network
+build-type:         Simple
+
+common lang
+    default-language: GHC2021
+    default-extensions:
+        DerivingStrategies
+        DerivingVia
+        DeriveAnyClass
+        GeneralizedNewtypeDeriving
+        LambdaCase
+        MultiWayIf
+        BlockArguments
+        ViewPatterns
+        PatternSynonyms
+        QuasiQuotes
+        ApplicativeDo
+        OverloadedStrings
+        OverloadedLabels
+        OverloadedRecordDot
+        DuplicateRecordFields
+        NoFieldSelectors
+        RecordWildCards
+        NamedFieldPuns
+        TypeFamilies
+        DataKinds
+        FunctionalDependencies
+        UndecidableInstances
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wmissing-export-lists
+        -Wmissing-home-modules
+        -Wmissing-deriving-strategies
+        -Wpartial-fields
+        -Wredundant-constraints
+        -Woperator-whitespace
+        -Wredundant-bang-patterns
+        -Wunused-type-patterns
+        -Wunused-packages
+
+library interop-proto
+    hs-source-dirs:   gen
+    default-language: GHC2021
+    exposed-modules:
+        Proto.Grpc.Testing.Empty
+        Proto.Grpc.Testing.Empty_Fields
+        Proto.Grpc.Testing.Messages
+        Proto.Grpc.Testing.Messages_Fields
+        Proto.Grpc.Testing.Test
+        Proto.Grpc.Testing.Test_Fields
+    build-depends:
+        base >=4.17 && <5,
+        proto-lens-runtime
+
+library
+    import:           lang
+    hs-source-dirs:   src
+    exposed-modules:
+        Peculiar.Rpc.Interop.Client
+        Peculiar.Rpc.Interop.Compare
+        Peculiar.Rpc.Interop.Server
+    build-depends:
+        aeson,
+        async,
+        base >=4.17 && <5,
+        base64-bytestring,
+        bytestring,
+        directory,
+        filepath,
+        lens-family,
+        network,
+        peculiar-rpc,
+        peculiar-rpc-core,
+        peculiar-rpc-interop:interop-proto,
+        process,
+        proto-lens,
+        text
+
+executable peculiar-rpc-interop-server
+    import:           lang
+    hs-source-dirs:   app
+    main-is:          Server.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    build-depends:
+        base,
+        peculiar-rpc,
+        peculiar-rpc-interop,
+        text
+
+executable peculiar-rpc-interop-client
+    import:           lang
+    hs-source-dirs:   app
+    main-is:          Client.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    build-depends:
+        base,
+        bytestring,
+        peculiar-rpc,
+        peculiar-rpc-interop,
+        text
+
+executable peculiar-rpc-interop-compare
+    import:           lang
+    hs-source-dirs:   app
+    main-is:          Compare.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    build-depends:
+        base,
+        peculiar-rpc-interop

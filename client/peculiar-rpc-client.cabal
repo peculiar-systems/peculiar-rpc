@@ -1,0 +1,131 @@
+cabal-version:      3.0
+name:               peculiar-rpc-client
+version:            0.3.0.0
+synopsis:           The gRPC, gRPC-Web and Connect client of peculiar-rpc, without its server
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Network
+build-type:         Simple
+
+common lang
+    default-language: GHC2021
+    default-extensions:
+        DerivingStrategies
+        DerivingVia
+        DeriveAnyClass
+        GeneralizedNewtypeDeriving
+        LambdaCase
+        MultiWayIf
+        BlockArguments
+        ViewPatterns
+        PatternSynonyms
+        QuasiQuotes
+        ApplicativeDo
+        OverloadedStrings
+        OverloadedLabels
+        OverloadedRecordDot
+        DuplicateRecordFields
+        NoFieldSelectors
+        RecordWildCards
+        NamedFieldPuns
+        TypeFamilies
+        DataKinds
+        FunctionalDependencies
+        UndecidableInstances
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wmissing-export-lists
+        -Wmissing-home-modules
+        -Wmissing-deriving-strategies
+        -Wpartial-fields
+        -Wredundant-constraints
+        -Woperator-whitespace
+        -Wredundant-bang-patterns
+        -Wunused-type-patterns
+        -Wunused-packages
+
+library
+    import:           lang
+    hs-source-dirs:   src
+    exposed-modules:
+        Peculiar.Rpc.Calling
+        Peculiar.Rpc.Channel
+        Peculiar.Rpc.Client
+        Peculiar.Rpc.Client.Call
+        Peculiar.Rpc.Client.Dial
+        Peculiar.Rpc.Client.Exchange
+        Peculiar.Rpc.Client.Http1
+        Peculiar.Rpc.Client.Http2
+        Peculiar.Rpc.Compression
+        Peculiar.Rpc.Deadline
+        Peculiar.Rpc.Derive.Client
+        Peculiar.Rpc.Descriptor
+        Peculiar.Rpc.Encoding
+        Peculiar.Rpc.Error
+        Peculiar.Rpc.Http2Settings
+        Peculiar.Rpc.Liveness
+        Peculiar.Rpc.Metadata
+        Peculiar.Rpc.Remote
+        Peculiar.Rpc.Retry
+        Peculiar.Rpc.Route
+        Peculiar.Rpc.Rpc
+        Peculiar.Rpc.Tls.Client
+        Peculiar.Rpc.Watch
+    build-depends:
+        array,
+        async,
+        base >=4.17 && <5,
+        brotli,
+        bytestring,
+        case-insensitive,
+        containers,
+        crypton-connection,
+        crypton-x509-store,
+        crypton-x509-system,
+        http-client,
+        http-client-tls,
+        http-semantics,
+        http-types,
+        http2,
+        lens-family,
+        network,
+        peculiar-rpc-core,
+        peculiar-rpc-json,
+        proto-lens,
+        proto-lens-protobuf-types,
+        recv,
+        snappy-c,
+        stm,
+        template-haskell,
+        text,
+        time-manager,
+        tls,
+        zlib,
+        zstd
+
+library echo-proto
+    hs-source-dirs:   test-gen
+    default-language: GHC2021
+    exposed-modules:
+        Proto.Peculiar.Test.V1.Echo
+        Proto.Peculiar.Test.V1.Echo_Fields
+        Proto.Peculiar.Test.V1.Mood
+    build-depends:
+        base >=4.17 && <5,
+        proto-lens-runtime
+
+test-suite peculiar-rpc-client-test
+    import:           lang
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    build-depends:
+        base,
+        hedgehog,
+        peculiar-rpc-client,
+        peculiar-rpc-client:echo-proto,
+        proto-lens

@@ -1,0 +1,127 @@
+cabal-version:      3.0
+name:               peculiar-rpc-conformance
+version:            0.1.0.0
+synopsis:           The Connect conformance server for peculiar-rpc
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Network
+build-type:         Simple
+
+common lang
+    default-language: GHC2021
+    default-extensions:
+        DerivingStrategies
+        DerivingVia
+        DeriveAnyClass
+        GeneralizedNewtypeDeriving
+        LambdaCase
+        MultiWayIf
+        BlockArguments
+        ViewPatterns
+        PatternSynonyms
+        QuasiQuotes
+        ApplicativeDo
+        OverloadedStrings
+        OverloadedLabels
+        OverloadedRecordDot
+        DuplicateRecordFields
+        NoFieldSelectors
+        RecordWildCards
+        NamedFieldPuns
+        TypeFamilies
+        DataKinds
+        FunctionalDependencies
+        UndecidableInstances
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wmissing-export-lists
+        -Wmissing-home-modules
+        -Wmissing-deriving-strategies
+        -Wpartial-fields
+        -Wredundant-constraints
+        -Woperator-whitespace
+        -Wredundant-bang-patterns
+        -Wunused-type-patterns
+        -Wunused-packages
+
+library conformance-proto
+    hs-source-dirs:   gen
+    default-language: GHC2021
+    exposed-modules:
+        Proto.Connectrpc.Conformance.V1.ClientCompat
+        Proto.Connectrpc.Conformance.V1.ClientCompat_Fields
+        Proto.Connectrpc.Conformance.V1.Config
+        Proto.Connectrpc.Conformance.V1.Config_Fields
+        Proto.Connectrpc.Conformance.V1.ServerCompat
+        Proto.Connectrpc.Conformance.V1.ServerCompat_Fields
+        Proto.Connectrpc.Conformance.V1.Service
+        Proto.Connectrpc.Conformance.V1.Service_Fields
+        Proto.Connectrpc.Conformance.V1.Suite
+        Proto.Connectrpc.Conformance.V1.Suite_Fields
+    build-depends:
+        base >=4.17 && <5,
+        proto-lens-protobuf-types,
+        proto-lens-runtime
+
+library
+    import:           lang
+    hs-source-dirs:   src
+    exposed-modules:
+        Peculiar.Rpc.Conformance
+        Peculiar.Rpc.Conformance.Client
+        Peculiar.Rpc.Conformance.Compare
+        Peculiar.Rpc.Conformance.Delimited
+        Peculiar.Rpc.Conformance.Report
+        Peculiar.Rpc.Conformance.Service
+        Peculiar.Rpc.Conformance.Transport
+        Peculiar.Rpc.Conformance.Types
+    build-depends:
+        aeson,
+        async,
+        base >=4.17 && <5,
+        base64-bytestring,
+        bytestring,
+        containers,
+        http-client,
+        stm,
+        lens-family,
+        peculiar-rpc,
+        peculiar-rpc-client,
+        peculiar-rpc-conformance:conformance-proto,
+        peculiar-rpc-core,
+        peculiar-rpc-json,
+        process,
+        proto-lens,
+        proto-lens-protobuf-types,
+        text
+
+executable peculiar-rpc-conformance-server
+    import:           lang
+    hs-source-dirs:   app
+    main-is:          Main.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    build-depends:
+        base,
+        peculiar-rpc-conformance
+
+executable peculiar-rpc-conformance-client
+    import:           lang
+    hs-source-dirs:   app
+    main-is:          Client.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    build-depends:
+        base,
+        peculiar-rpc-conformance
+
+executable peculiar-rpc-compare
+    import:           lang
+    hs-source-dirs:   app
+    main-is:          Compare.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    build-depends:
+        base,
+        peculiar-rpc-conformance

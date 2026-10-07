@@ -1,0 +1,114 @@
+--- a/Network/HTTP2/H2/Receiver.hs
++++ b/Network/HTTP2/H2/Receiver.hs
+@@ -444,7 +444,7 @@
+ type Payload = ByteString
+ 
+ control :: FrameType -> FrameHeader -> Payload -> Context -> IO ()
+-control FrameSettings header@FrameHeader{flags, streamId} bs Context{myFirstSettings, controlQ, settingsRate, mySettings, rxFlow} = do
++control FrameSettings header@FrameHeader{flags, streamId} bs ctx@Context{myFirstSettings, controlQ, settingsRate, mySettings, rxFlow} = do
+     SettingsFrame peerAlist <- guardIt $ decodeSettingsFrame header bs
+     traverse_ E.throwIO $ checkSettingsList peerAlist
+     if testAck flags
+@@ -458,6 +458,7 @@
+             when (rate > settingsRateLimit mySettings) $
+                 E.throwIO $
+                     ConnectionErrorIsSent EnhanceYourCalm streamId "too many settings"
++            updatePeerSettings ctx peerAlist
+             let ack = settingsFrame setAck []
+             sent <- readIORef myFirstSettings
+             if sent
+--- a/Network/HTTP2/H2/Sender.hs
++++ b/Network/HTTP2/H2/Sender.hs
+@@ -13,7 +13,6 @@
+ import qualified Data.ByteString as BS
+ import qualified Data.ByteString.Lazy as BS.Lazy
+ import Data.IORef (modifyIORef', readIORef, writeIORef)
+-import Data.IntMap.Strict (IntMap)
+ import Foreign.Ptr (castPtr, minusPtr, plusPtr)
+ import Network.ByteOrder
+ import Network.HTTP.Semantics.Client
+@@ -39,35 +38,6 @@
+     | O Output
+     | Flush
+ 
+--- Peer SETTINGS_INITIAL_WINDOW_SIZE
+--- Adjusting initial window size for streams
+-updatePeerSettings :: Context -> SettingsList -> IO ()
+-updatePeerSettings Context{peerSettings, oddStreamTable, evenStreamTable} peerAlist = do
+-    oldws <- initialWindowSize <$> readIORef peerSettings
+-    modifyIORef' peerSettings $ \old -> fromSettingsList old peerAlist
+-    newws <- initialWindowSize <$> readIORef peerSettings
+-    -- FIXME: race condition
+-    -- 1) newOddStream reads old peerSettings and
+-    --    insert it to its stream table after adjusting.
+-    -- 2) newOddStream reads new peerSettings and
+-    --    insert it to its stream table before adjusting.
+-    let dif = newws - oldws
+-    when (dif /= 0) $ do
+-        getOddStreams oddStreamTable >>= updateAllStreamTxFlow dif
+-        getEvenStreams evenStreamTable >>= updateAllStreamTxFlow dif
+-  where
+-    updateAllStreamTxFlow :: WindowSize -> IntMap Stream -> IO ()
+-    updateAllStreamTxFlow siz strms =
+-        forM_ strms $ \strm -> increaseStreamWindowSize strm siz `E.catch` connectionError
+-    -- RFC 9113, section 6.9.2: "An endpoint MUST treat a change to
+-    -- SETTINGS_INITIAL_WINDOW_SIZE that causes any flow-control window to
+-    -- exceed the maximum size as a connection error of type
+-    -- FLOW_CONTROL_ERROR."  The same overflow from a WINDOW_UPDATE is a stream
+-    -- error, which is what 'increaseStreamWindowSize' raises.
+-    connectionError (StreamErrorIsSent err sid msg) =
+-        E.throwIO $ ConnectionErrorIsSent err sid msg
+-    connectionError e = E.throwIO e
+-
+ checkDone :: Context -> Int -> IO (Maybe E.SomeException)
+ checkDone Context{..} 0 = atomically $ do
+     isEmptyC <- isEmptyTQueue controlQ
+@@ -148,8 +118,6 @@
+             case ms of
+                 Nothing -> return ()
+                 Just peerAlist -> do
+-                    -- Peer SETTINGS_INITIAL_WINDOW_SIZE
+-                    updatePeerSettings ctx peerAlist
+                     -- Peer SETTINGS_MAX_FRAME_SIZE
+                     case lookup SettingsMaxFrameSize peerAlist of
+                         Nothing -> return ()
+--- a/Network/HTTP2/H2/Window.hs
++++ b/Network/HTTP2/H2/Window.hs
+@@ -8,6 +8,7 @@
+ import qualified Control.Exception as E
+ import qualified Data.ByteString as BS
+ import Data.IORef
++import Data.IntMap.Strict (IntMap)
+ import Network.Control
+ 
+ import Imports
+@@ -15,6 +16,8 @@
+ import Network.HTTP2.H2.Context
+ import Network.HTTP2.H2.EncodeFrame
+ import Network.HTTP2.H2.Queue
++import Network.HTTP2.H2.Settings
++import Network.HTTP2.H2.StreamTable
+ import Network.HTTP2.H2.Types
+ 
+ getStreamWindowSize :: Stream -> IO WindowSize
+@@ -126,3 +129,20 @@
+                     writeTQueue q le
+                     return total
+                 _ -> return total
++
++updatePeerSettings :: Context -> SettingsList -> IO ()
++updatePeerSettings Context{peerSettings, oddStreamTable, evenStreamTable} peerAlist = do
++    oldws <- initialWindowSize <$> readIORef peerSettings
++    modifyIORef' peerSettings $ \old -> fromSettingsList old peerAlist
++    newws <- initialWindowSize <$> readIORef peerSettings
++    let dif = newws - oldws
++    when (dif /= 0) $ do
++        getOddStreams oddStreamTable >>= updateAllStreamTxFlow dif
++        getEvenStreams evenStreamTable >>= updateAllStreamTxFlow dif
++  where
++    updateAllStreamTxFlow :: WindowSize -> IntMap Stream -> IO ()
++    updateAllStreamTxFlow siz strms =
++        forM_ strms $ \strm -> increaseStreamWindowSize strm siz `E.catch` connectionError
++    connectionError (StreamErrorIsSent err sid msg) =
++        E.throwIO $ ConnectionErrorIsSent err sid msg
++    connectionError e = E.throwIO e

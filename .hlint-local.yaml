@@ -1,0 +1,19 @@
+- ignore:
+    name: Avoid partial function
+    within: [Peculiar.Rpc.Core.Timeout, Peculiar.Rpc.Json.Time]
+- ignore:
+    name: Avoid partial function
+    within: [Peculiar.Rpc.Conformance.Service]
+- functions:
+    - name: String
+      within: [Peculiar.Rpc.Derive, Peculiar.Rpc.Derive.Client, Peculiar.Rpc.Json.Scalar, Peculiar.Rpc.Json.Encode, Peculiar.Rpc.Json.Decode, Peculiar.Rpc.Json.Parse, Peculiar.Rpc.Json.Time, Peculiar.Rpc.Rest]
+      message: "Template Haskell names and type-level literals are Strings in its own API, and aeson's Value has a constructor named String."
+- ignore:
+    name: Avoid partial function
+    within: [Peculiar.Rpc.Handler, Peculiar.Rpc.Validate, Peculiar.Rpc.Validate.Arithmetic]
+- ignore:
+    name: "Use ?~"
+- ignore:
+    name: "Use zipFrom"
+- ignore:
+    name: "Use eitherToMaybe"

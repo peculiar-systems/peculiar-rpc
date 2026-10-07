@@ -1,0 +1,82 @@
+# Cases that fail in proto-lens, which parses and serialises the binary
+# format for these tests, and not in the JSON mapping: its binary parser
+# accepts some malformed input, merges some repeated and oneof fields
+# wrongly, fails on proto2 enums holding unknown values, and it has no
+# proto2 extensions. Every other JSON case passes, recommended ones included.
+Recommended.Proto2.JsonInput.FieldNameExtension.Validator # Expected JSON payload but got type 1
+Recommended.Proto2.ProtobufInput.ValidDataOneofBinary.MESSAGE.Merge.ProtobufOutput # Output was not equivalent to reference message: Expect: \202\007\014\022\012\010\001\020\001\310\005\001\310\005\001, but got: \
+Recommended.Proto2.ProtobufInput.ValidDataRepeated.ENUM.PackedInput.DefaultOutput.ProtobufOutput # Failed to parse input or produce output.
+Recommended.Proto2.ProtobufInput.ValidDataRepeated.ENUM.PackedInput.PackedOutput.ProtobufOutput # Failed to parse input or produce output.
+Recommended.Proto2.ProtobufInput.ValidDataRepeated.ENUM.PackedInput.UnpackedOutput.ProtobufOutput # Failed to parse input or produce output.
+Recommended.Proto2.ProtobufInput.ValidDataRepeated.ENUM.UnpackedInput.DefaultOutput.ProtobufOutput # Failed to parse input or produce output.
+Recommended.Proto2.ProtobufInput.ValidDataRepeated.ENUM.UnpackedInput.PackedOutput.ProtobufOutput # Failed to parse input or produce output.
+Recommended.Proto2.ProtobufInput.ValidDataRepeated.ENUM.UnpackedInput.UnpackedOutput.ProtobufOutput # Failed to parse input or produce output.
+Recommended.Proto2.ProtobufInput.ValidDataScalarBinary.ENUM[4].ProtobufOutput # Failed to parse input or produce output.
+Recommended.Proto2.ProtobufInput.ValidDataScalarBinary.ENUM[5].ProtobufOutput # Failed to parse input or produce output.
+Recommended.Proto3.ProtobufInput.ValidDataOneofBinary.MESSAGE.Merge.ProtobufOutput # Output was not equivalent to reference message: Expect: \202\007\014\022\012\010\001\020\001\310\005\001\310\005\001, but got: \
+Recommended.Proto3.ProtobufInput.ValidDataScalarBinary.ENUM[0].ProtobufOutput # Output was not equivalent to reference message: Expect: , but got: \250\001\000
+Recommended.Proto3.ProtobufInput.ValidDataScalarBinary.ENUM[3].ProtobufOutput # Output was not equivalent to reference message: Expect: \250\001\377\377\377\377\377\377\377\377\377\001, but got: 
+Required.Proto2.ProtobufInput.BadTag_FieldNumberSlightlyTooHigh # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.BadTag_FieldNumberTooHigh # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.BadTag_OverlongVarint # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.BadTag_VarintMoreThanTenBytes # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.IllegalZeroFieldNum_Case_0 # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.IllegalZeroFieldNum_Case_1 # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.IllegalZeroFieldNum_Case_2 # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.IllegalZeroFieldNum_Case_3 # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.RepeatedScalarMessageMerge.JsonOutput # Output was not equivalent to reference message: deleted: optional_nested_message.corecursive.optional_int64: 1234modified: optio
+Required.Proto2.ProtobufInput.RepeatedScalarMessageMerge.ProtobufOutput # Output was not equivalent to reference message: deleted: optional_nested_message.corecursive.optional_int64: 1234modified: optio
+Required.Proto2.ProtobufInput.RepeatedScalarSelectsLast.ENUM.JsonOutput # Failed to parse input or produce output.
+Required.Proto2.ProtobufInput.RepeatedScalarSelectsLast.ENUM.ProtobufOutput # Failed to parse input or produce output.
+Required.Proto2.ProtobufInput.UnmatchedEndGroup # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.UnmatchedEndGroupNestedLen # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.UnmatchedEndGroupUnknown # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.UnmatchedEndGroupWithData # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.UnmatchedEndGroupWrongType # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.UnmatchedStartGroupNested # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.UnmatchedStartGroupNestedLen # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.UnmatchedStartGroupUnknown # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.UnmatchedStartGroupWithData # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.UnmatchedStartGroupWrongType # Should have failed to parse, but didn't.
+Required.Proto2.ProtobufInput.ValidDataMap.STRING.ENUM.MissingDefault.JsonOutput # Output was not equivalent to reference message: modified: map_string_nested_enum['']: FOO -> NEG
+Required.Proto2.ProtobufInput.ValidDataMap.STRING.ENUM.MissingDefault.ProtobufOutput # Output was not equivalent to reference message: modified: map_string_nested_enum['']: FOO -> NEG
+Required.Proto2.ProtobufInput.ValidDataOneof.MESSAGE.Merge.JsonOutput # Output was not equivalent to reference message: deleted: oneof_nested_message.corecursive.optional_int32: 1deleted: oneof_nested
+Required.Proto2.ProtobufInput.ValidDataOneof.MESSAGE.Merge.ProtobufOutput # Output was not equivalent to reference message: deleted: oneof_nested_message.corecursive.optional_int32: 1deleted: oneof_nested
+Required.Proto2.ProtobufInput.ValidDataRepeated.ENUM.PackedInput.JsonOutput # Failed to parse input or produce output.
+Required.Proto2.ProtobufInput.ValidDataRepeated.ENUM.PackedInput.ProtobufOutput # Failed to parse input or produce output.
+Required.Proto2.ProtobufInput.ValidDataRepeated.ENUM.UnpackedInput.JsonOutput # Failed to parse input or produce output.
+Required.Proto2.ProtobufInput.ValidDataRepeated.ENUM.UnpackedInput.ProtobufOutput # Failed to parse input or produce output.
+Required.Proto2.ProtobufInput.ValidDataScalar.ENUM[4].JsonOutput # Failed to parse input or produce output.
+Required.Proto2.ProtobufInput.ValidDataScalar.ENUM[4].ProtobufOutput # Failed to parse input or produce output.
+Required.Proto2.ProtobufInput.ValidDataScalar.ENUM[5].JsonOutput # Failed to parse input or produce output.
+Required.Proto2.ProtobufInput.ValidDataScalar.ENUM[5].ProtobufOutput # Failed to parse input or produce output.
+Required.Proto2.ProtobufInput.ValidMessageSetEncoding.OutOfOrderGroupsEntries.ProtobufOutput # Failed to parse input or produce output.
+Required.Proto3.ProtobufInput.BadTag_FieldNumberSlightlyTooHigh # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.BadTag_FieldNumberTooHigh # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.BadTag_OverlongVarint # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.BadTag_VarintMoreThanTenBytes # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.IllegalZeroFieldNum_Case_0 # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.IllegalZeroFieldNum_Case_1 # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.IllegalZeroFieldNum_Case_2 # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.IllegalZeroFieldNum_Case_3 # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.MismatchedGroupTags # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.MismatchedNestedGroupTags # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.RepeatedScalarMessageMerge.JsonOutput # Output was not equivalent to reference message: deleted: optional_nested_message.corecursive.optional_int64: 1234modified: optio
+Required.Proto3.ProtobufInput.RepeatedScalarMessageMerge.ProtobufOutput # Output was not equivalent to reference message: deleted: optional_nested_message.corecursive.optional_int64: 1234modified: optio
+Required.Proto3.ProtobufInput.UnmatchedEndGroup # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.UnmatchedEndGroupNested # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.UnmatchedEndGroupNestedLen # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.UnmatchedEndGroupUnknown # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.UnmatchedEndGroupWithData # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.UnmatchedEndGroupWrongType # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.UnmatchedStartGroup # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.UnmatchedStartGroupNested # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.UnmatchedStartGroupNestedLen # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.UnmatchedStartGroupUnknown # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.UnmatchedStartGroupWithData # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.UnmatchedStartGroupWrongType # Should have failed to parse, but didn't.
+Required.Proto3.ProtobufInput.ValidDataMap.STRING.ENUM.MissingDefault.JsonOutput # Output was not equivalent to reference message: modified: map_string_nested_enum['']: FOO -> NEG
+Required.Proto3.ProtobufInput.ValidDataOneof.MESSAGE.Merge.JsonOutput # Output was not equivalent to reference message: deleted: oneof_nested_message.corecursive.optional_int32: 1deleted: oneof_nested
+Required.Proto3.ProtobufInput.ValidDataOneof.MESSAGE.Merge.ProtobufOutput # Output was not equivalent to reference message: deleted: oneof_nested_message.corecursive.optional_int32: 1deleted: oneof_nested
+Required.Proto3.ProtobufInput.ValidDataScalar.ENUM[3].JsonOutput # Output was not equivalent to reference message: deleted: optional_nested_enum: NEG
+Required.Proto3.ProtobufInput.ValidDataScalar.ENUM[3].ProtobufOutput # Output was not equivalent to reference message: deleted: optional_nested_enum: NEG

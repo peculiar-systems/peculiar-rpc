@@ -1,0 +1,10 @@
+import: cabal.project
+
+package peculiar-rpc-core
+  ghc-options: -Werror
+
+package peculiar-rpc
+  ghc-options: -Werror
+
+package peculiar-rpc-conformance
+  ghc-options: -Werror

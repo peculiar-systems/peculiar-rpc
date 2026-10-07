@@ -1,0 +1,12 @@
+dist-newstyle/
+result
+result-*
+.direnv/
+rpc/gen/
+conformance/gen/
+rpc/grpc-gen/
+node_modules/
+dist/
+interop/gen/
+json/gen/
+apis/gen/

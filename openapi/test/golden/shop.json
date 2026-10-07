@@ -1,0 +1,357 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Shop",
+    "version": "1.1.0",
+    "description": "Things for sale."
+  },
+  "tags": [
+    {
+      "name": "Shop",
+      "description": "Sells things."
+    }
+  ],
+  "paths": {
+    "/v1/catalog/{name}": {
+      "get": {
+        "operationId": "Shop_GetProduct_1",
+        "summary": "Looks up one product.",
+        "description": "Looks up one product.",
+        "tags": [
+          "Shop"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/shop.v1.Product"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error, as a google.rpc.Status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/google.rpc.Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/orders": {
+      "post": {
+        "operationId": "Shop_PlaceOrder",
+        "summary": "Places an order.",
+        "description": "Places an order.",
+        "tags": [
+          "Shop"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/shop.v1.PlaceOrderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/shop.v1.Order"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error, as a google.rpc.Status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/google.rpc.Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/{name}": {
+      "get": {
+        "operationId": "Shop_GetProduct",
+        "summary": "Looks up one product.",
+        "description": "Looks up one product.",
+        "tags": [
+          "Shop"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/shop.v1.Product"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error, as a google.rpc.Status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/google.rpc.Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/{name}:cancel": {
+      "post": {
+        "operationId": "Shop_CancelOrder",
+        "summary": "Cancels an order that has not shipped.",
+        "description": "Cancels an order that has not shipped.",
+        "tags": [
+          "Shop"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/shop.v1.CancelOrderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/shop.v1.Order"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error, as a google.rpc.Status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/google.rpc.Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "google.protobuf.Any": {
+        "type": "object",
+        "description": "A message of the type named by @type, with its fields alongside.",
+        "properties": {
+          "@type": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": {}
+      },
+      "google.rpc.Status": {
+        "type": "object",
+        "description": "The error model: a code from google.rpc.Code, a message for developers, and typed details.",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/google.protobuf.Any"
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "shop.v1.Availability": {
+        "type": "string",
+        "description": "Whether a product can be bought.",
+        "enum": [
+          "AVAILABILITY_UNSPECIFIED",
+          "AVAILABILITY_IN_STOCK",
+          "AVAILABILITY_OUT_OF_STOCK",
+          "AVAILABILITY_PREORDER"
+        ]
+      },
+      "shop.v1.CancelOrderRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The order to cancel."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why, for the record.",
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "shop.v1.GetProductRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The product to look up."
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "shop.v1.Order": {
+        "type": "object",
+        "description": "An order for one or more products.",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "A street address."
+          },
+          "name": {
+            "type": "string",
+            "description": "The resource name, orders/{order}.",
+            "readOnly": true
+          },
+          "pickupPoint": {
+            "type": "string",
+            "description": "A pickup point."
+          },
+          "placed": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the order was placed.",
+            "readOnly": true
+          },
+          "products": {
+            "type": "array",
+            "description": "The products, by resource name.",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "maxItems": 20
+          }
+        }
+      },
+      "shop.v1.PlaceOrderRequest": {
+        "type": "object",
+        "properties": {
+          "order": {
+            "$ref": "#/components/schemas/shop.v1.Order",
+            "description": "The order to place."
+          },
+          "requestId": {
+            "type": "string",
+            "description": "A key that makes retries safe."
+          }
+        },
+        "required": [
+          "order",
+          "requestId"
+        ]
+      },
+      "shop.v1.Product": {
+        "type": "object",
+        "description": "Something for sale.",
+        "properties": {
+          "availability": {
+            "$ref": "#/components/schemas/shop.v1.Availability",
+            "description": "Whether it can be bought now."
+          },
+          "description": {
+            "type": "string",
+            "description": "A longer description, in Markdown."
+          },
+          "labels": {
+            "type": "object",
+            "description": "Free-form labels.",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "deprecated": true
+          },
+          "name": {
+            "type": "string",
+            "description": "The resource name, products/{product}.",
+            "readOnly": true
+          },
+          "priceCents": {
+            "type": "string",
+            "format": "int64",
+            "description": "The price in cents.",
+            "exclusiveMinimum": 0.0
+          },
+          "title": {
+            "type": "string",
+            "description": "What the product is called.",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        }
+      }
+    }
+  }
+}

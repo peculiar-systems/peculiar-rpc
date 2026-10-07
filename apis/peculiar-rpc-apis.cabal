@@ -1,0 +1,33 @@
+cabal-version:      3.0
+name:               peculiar-rpc-apis
+version:            0.3.0.0
+synopsis:           Google API annotations, google.rpc error details and protovalidate rules for proto-lens
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Network
+build-type:         Simple
+
+library
+    hs-source-dirs:   gen
+    default-language: GHC2021
+    exposed-modules:
+        Proto.Buf.Validate.Validate
+        Proto.Buf.Validate.Validate_Fields
+        Proto.Google.Api.Annotations
+        Proto.Google.Api.Annotations_Fields
+        Proto.Google.Api.FieldBehavior
+        Proto.Google.Api.FieldBehavior_Fields
+        Proto.Google.Api.Http
+        Proto.Google.Api.Http_Fields
+        Proto.Google.Rpc.Code
+        Proto.Google.Rpc.Code_Fields
+        Proto.Google.Rpc.ErrorDetails
+        Proto.Google.Rpc.ErrorDetails_Fields
+        Proto.Google.Rpc.Status
+        Proto.Google.Rpc.Status_Fields
+    build-depends:
+        base >=4.17 && <5,
+        proto-lens-protobuf-types,
+        proto-lens-runtime

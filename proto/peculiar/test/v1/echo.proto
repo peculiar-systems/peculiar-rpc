@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package peculiar.test.v1;
+
+import "peculiar/test/v1/mood.proto";
+
+message SayRequest {
+  string text = 1;
+  int32 fail_code = 2;
+  string fail_message = 3;
+  Mood mood = 4;
+}
+
+message SayResponse {
+  string text = 1;
+}
+
+message CountRequest {
+  int32 upto = 1;
+}
+
+message CountResponse {
+  int32 n = 1;
+}
+
+message SumRequest {
+  int32 n = 1;
+}
+
+message SumResponse {
+  int32 total = 1;
+}
+
+message ChatRequest {
+  string text = 1;
+}
+
+message ChatResponse {
+  string text = 1;
+}
+
+service Echo {
+  rpc Say(SayRequest) returns (SayResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc Count(CountRequest) returns (stream CountResponse);
+  rpc Sum(stream SumRequest) returns (SumResponse);
+  rpc Chat(stream ChatRequest) returns (stream ChatResponse);
+}

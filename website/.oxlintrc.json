@@ -1,0 +1,62 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": ["src/gen/**", "dist/**", "node_modules/**"],
+  "rules": {
+    "no-floating-promises": [
+      "error",
+      {
+        "ignoreVoid": false,
+        "checkThenables": true
+      }
+    ],
+    "no-unnecessary-condition": [
+      "error",
+      {
+        "checkTypePredicates": false
+      }
+    ],
+    "switch-exhaustiveness-check": [
+      "error",
+      {
+        "allowDefaultCaseForExhaustiveSwitch": false,
+        "considerDefaultExhaustiveForUnions": false,
+        "requireDefaultForNonUnion": true
+      }
+    ],
+    "strict-boolean-expressions": [
+      "error",
+      {
+        "allowString": false,
+        "allowNumber": false,
+        "allowNullableObject": false
+      }
+    ],
+    "consistent-type-definitions": ["error", "type"],
+    "one-var": "off",
+    "no-magic-numbers": "off",
+    "prefer-readonly-parameter-types": "off",
+    "no-undefined": "off",
+    "sort-imports": "off",
+    "sort-keys": "off",
+    "no-optional-chaining": "off",
+    "no-ternary": "off",
+    "no-nested-ternary": "off",
+    "no-rest-spread-properties": "off",
+    "no-async-await": "off",
+    "no-await-in-loop": "off",
+    "prefer-destructuring": "off",
+    "prefer-named-capture-group": "off",
+    "max-statements": "off",
+    "max-lines": "off",
+    "max-params": "off",
+    "max-nested-calls": "off",
+    "id-length": "off",
+    "no-array-reduce": "off",
+    "no-array-callback-reference": "off",
+    "default-case": "off",
+    "no-null": "off",
+    "new-cap": "off",
+    "import-style": "off",
+    "no-await-expression-member": "off"
+  }
+}

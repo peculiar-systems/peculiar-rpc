@@ -1,0 +1,312 @@
+cabal-version:      3.0
+name:               peculiar-rpc
+version:            0.3.0.0
+synopsis:           gRPC, gRPC-Web and Connect from one Haskell server
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Network
+build-type:         Simple
+
+common lang
+    default-language: GHC2021
+    default-extensions:
+        DerivingStrategies
+        DerivingVia
+        DeriveAnyClass
+        GeneralizedNewtypeDeriving
+        LambdaCase
+        MultiWayIf
+        BlockArguments
+        ViewPatterns
+        PatternSynonyms
+        QuasiQuotes
+        ApplicativeDo
+        OverloadedStrings
+        OverloadedLabels
+        OverloadedRecordDot
+        DuplicateRecordFields
+        NoFieldSelectors
+        RecordWildCards
+        NamedFieldPuns
+        TypeFamilies
+        DataKinds
+        FunctionalDependencies
+        UndecidableInstances
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wmissing-export-lists
+        -Wmissing-home-modules
+        -Wmissing-deriving-strategies
+        -Wpartial-fields
+        -Wredundant-constraints
+        -Woperator-whitespace
+        -Wredundant-bang-patterns
+        -Wunused-type-patterns
+        -Wunused-packages
+
+library echo-proto
+    hs-source-dirs:   gen
+    default-language: GHC2021
+    exposed-modules:
+        Proto.Peculiar.Test.V1.Echo
+        Proto.Peculiar.Test.V1.Echo_Fields
+        Proto.Peculiar.Test.V1.Library
+        Proto.Peculiar.Test.V1.Library_Fields
+        Proto.Peculiar.Test.V1.Mood
+    build-depends:
+        base >=4.17 && <5,
+        peculiar-rpc-apis,
+        proto-lens-protobuf-types,
+        proto-lens-runtime
+
+library grpc-proto
+    visibility:       public
+    hs-source-dirs:   grpc-gen
+    default-language: GHC2021
+    exposed-modules:
+        Proto.Grpc.Health.V1.Health
+        Proto.Grpc.Health.V1.Health_Fields
+        Proto.Grpc.Reflection.V1.Reflection
+        Proto.Grpc.Reflection.V1.Reflection_Fields
+        Proto.Grpc.Reflection.V1alpha.Reflection
+        Proto.Grpc.Reflection.V1alpha.Reflection_Fields
+    build-depends:
+        base >=4.17 && <5,
+        proto-lens-runtime
+
+library
+    import:           lang
+    hs-source-dirs:   src
+    exposed-modules:
+        Peculiar.Rpc
+        Peculiar.Rpc.Catalog
+        Peculiar.Rpc.Context
+        Peculiar.Rpc.Derive
+        Peculiar.Rpc.Details
+        Peculiar.Rpc.Drain
+        Peculiar.Rpc.Handler
+        Peculiar.Rpc.Health
+        Peculiar.Rpc.Intercept
+        Peculiar.Rpc.Listen
+        Peculiar.Rpc.Mount
+        Peculiar.Rpc.Native
+        Peculiar.Rpc.OpenApi
+        Peculiar.Rpc.OpenApi.Document
+        Peculiar.Rpc.Received
+        Peculiar.Rpc.Reflection
+        Peculiar.Rpc.Reflection.Current
+        Peculiar.Rpc.Reflection.Legacy
+        Peculiar.Rpc.Reflection.Registry
+        Peculiar.Rpc.Rest
+        Peculiar.Rpc.Rest.Template
+        Peculiar.Rpc.Routes
+        Peculiar.Rpc.Routing
+        Peculiar.Rpc.Serve
+        Peculiar.Rpc.Service
+        Peculiar.Rpc.Tls
+        Peculiar.Rpc.Translate
+        Peculiar.Rpc.Validate
+        Peculiar.Rpc.Validate.Address
+        Peculiar.Rpc.Validate.Arithmetic
+        Peculiar.Rpc.Validate.Cel.Check
+        Peculiar.Rpc.Validate.Cel.Compile
+        Peculiar.Rpc.Validate.Cel.Eval
+        Peculiar.Rpc.Validate.Cel.Format
+        Peculiar.Rpc.Validate.Cel.Library
+        Peculiar.Rpc.Validate.Cel.Parse
+        Peculiar.Rpc.Validate.Cel.Syntax
+        Peculiar.Rpc.Validate.Cel.Time
+        Peculiar.Rpc.Validate.Cel.Value
+        Peculiar.Rpc.Validate.Dynamic
+        Peculiar.Rpc.Validate.Engine
+        Peculiar.Rpc.Validate.Rules
+        Peculiar.Rpc.Validate.Schema
+        Peculiar.Rpc.Validate.Uri
+        Peculiar.Rpc.Violations
+        Peculiar.Rpc.Wai
+        Peculiar.Rpc.Web
+        Peculiar.Rpc.Web.Direct
+        Peculiar.Rpc.Web.Http
+        Peculiar.Rpc.Web.Inbound
+        Peculiar.Rpc.Web.Outbound
+        Peculiar.Rpc.Web.Rest
+        Peculiar.Rpc.Web.Table
+    build-depends:
+        aeson,
+        array,
+        async,
+        base >=4.17 && <5,
+        bytestring,
+        case-insensitive,
+        containers,
+        crypton-x509,
+        crypton-x509-store,
+        crypton-x509-validation,
+        deriving-aeson,
+        directory,
+        http-semantics,
+        http-types,
+        http2,
+        lens-family,
+        megaparsec,
+        mtl,
+        network,
+        parser-combinators,
+        peculiar-rpc-apis,
+        peculiar-rpc-client,
+        peculiar-rpc-core,
+        peculiar-rpc-json,
+        peculiar-rpc:grpc-proto,
+        proto-lens,
+        proto-lens-protobuf-types,
+        re2,
+        recv,
+        stm,
+        template-haskell,
+        text,
+        time,
+        time-manager,
+        tls,
+        tz,
+        unix,
+        vector,
+        wai,
+        warp
+
+library validate-conformance-proto
+    hs-source-dirs:   validate-gen
+    default-language: GHC2021
+    exposed-modules:
+        Proto.Buf.Validate.Conformance.Harness.Harness
+        Proto.Buf.Validate.Conformance.Harness.Harness_Fields
+    build-depends:
+        base >=4.17 && <5,
+        peculiar-rpc-apis,
+        proto-lens-protobuf-types,
+        proto-lens-runtime
+
+library validate-conformance
+    import:           lang
+    hs-source-dirs:   validate-conformance
+    exposed-modules:
+        Peculiar.Rpc.Validate.Conformance
+    build-depends:
+        base >=4.17 && <5,
+        bytestring,
+        containers,
+        lens-family,
+        peculiar-rpc,
+        peculiar-rpc-apis,
+        peculiar-rpc:validate-conformance-proto,
+        proto-lens,
+        proto-lens-protobuf-types,
+        text,
+        time
+
+executable peculiar-rpc-validate-conformance
+    import:           lang
+    hs-source-dirs:   app
+    main-is:          ValidateConformance.hs
+    build-depends:
+        base,
+        peculiar-rpc:validate-conformance
+
+test-suite peculiar-rpc-test
+    import:           lang
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    other-modules:
+        Test.Peculiar.Rpc.Beside
+        Test.Peculiar.Rpc.Cel
+        Test.Peculiar.Rpc.Client
+        Test.Peculiar.Rpc.Echo
+        Test.Peculiar.Rpc.Harness
+        Test.Peculiar.Rpc.Health
+        Test.Peculiar.Rpc.Library
+        Test.Peculiar.Rpc.Lifecycle
+        Test.Peculiar.Rpc.Middleware
+        Test.Peculiar.Rpc.Mount
+        Test.Peculiar.Rpc.Native
+        Test.Peculiar.Rpc.Peer
+        Test.Peculiar.Rpc.Reflection
+        Test.Peculiar.Rpc.Rest
+        Test.Peculiar.Rpc.Shutdown
+        Test.Peculiar.Rpc.Validation
+        Test.Peculiar.Rpc.Web
+    build-depends:
+        async,
+        base,
+        base64-bytestring,
+        bytestring,
+        case-insensitive,
+        containers,
+        directory,
+        hedgehog,
+        http-client,
+        http-types,
+        lens-family,
+        network,
+        peculiar-rpc-apis,
+        peculiar-rpc,
+        peculiar-rpc:echo-proto,
+        peculiar-rpc:grpc-proto,
+        peculiar-rpc-client,
+        peculiar-rpc-core,
+        peculiar-rpc-json,
+        process,
+        proto-lens,
+        proto-lens-protobuf-types,
+        text,
+        wai,
+        warp
+
+test-suite peculiar-rpc-window-test
+    import:           lang
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Window.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N1 -C0"
+    other-modules:
+        Test.Peculiar.Rpc.Echo
+        Test.Peculiar.Rpc.Harness
+        Test.Peculiar.Rpc.Window
+    build-depends:
+        async,
+        base,
+        bytestring,
+        hedgehog,
+        lens-family,
+        network,
+        peculiar-rpc,
+        peculiar-rpc:echo-proto,
+        peculiar-rpc-client,
+        peculiar-rpc-core,
+        proto-lens,
+        stm,
+        text
+
+benchmark peculiar-rpc-bench
+    import:           lang
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   bench
+    main-is:          Main.hs
+    ghc-options:      -threaded -rtsopts "-with-rtsopts=-N"
+    build-depends:
+        async,
+        base,
+        bytestring,
+        http-client,
+        lens-family,
+        peculiar-rpc,
+        peculiar-rpc:echo-proto,
+        peculiar-rpc-client,
+        peculiar-rpc-core,
+        proto-lens,
+        tasty-bench,
+        text

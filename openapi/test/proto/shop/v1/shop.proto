@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package shop.v1;
+
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+
+// Sells things.
+service Shop {
+  // Looks up one product.
+  rpc GetProduct(GetProductRequest) returns (Product) {
+    option (google.api.http) = {
+      get: "/v1/{name=products/*}"
+      additional_bindings {get: "/v1/catalog/{name=products/*}"}
+    };
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+
+  // Places an order.
+  rpc PlaceOrder(PlaceOrderRequest) returns (Order) {
+    option (google.api.http) = {
+      post: "/v1/orders"
+      body: "*"
+    };
+  }
+
+  // Cancels an order that has not shipped.
+  rpc CancelOrder(CancelOrderRequest) returns (Order) {
+    option (google.api.http) = {
+      post: "/v1/{name=orders/*}:cancel"
+      body: "*"
+    };
+  }
+}
+
+// Something for sale.
+message Product {
+  // The resource name, products/{product}.
+  string name = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+  // What the product is called.
+  string title = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 80
+  }];
+  // The price in cents.
+  int64 price_cents = 3 [(buf.validate.field).int64.gt = 0];
+  // Free-form labels.
+  map<string, string> labels = 4 [deprecated = true];
+  // Whether it can be bought now.
+  Availability availability = 5;
+  // A longer description, in Markdown.
+  string description = 7;
+}
+
+// Whether a product can be bought.
+enum Availability {
+  AVAILABILITY_UNSPECIFIED = 0;
+  // In stock.
+  AVAILABILITY_IN_STOCK = 1;
+  // None left.
+  AVAILABILITY_OUT_OF_STOCK = 2;
+  // Not out yet, but can be ordered.
+  AVAILABILITY_PREORDER = 3;
+}
+
+message GetProductRequest {
+  // The product to look up.
+  string name = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message PlaceOrderRequest {
+  // The order to place.
+  Order order = 1 [(buf.validate.field).required = true];
+  // A key that makes retries safe.
+  string request_id = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// An order for one or more products.
+message Order {
+  // The resource name, orders/{order}.
+  string name = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+  // The products, by resource name.
+  repeated string products = 2 [(buf.validate.field).repeated = {
+    min_items: 1
+    max_items: 20
+  }];
+  // When the order was placed.
+  google.protobuf.Timestamp placed = 3 [(google.api.field_behavior) = OUTPUT_ONLY];
+  // Where the order goes.
+  oneof delivery {
+    option (buf.validate.oneof).required = true;
+    // A street address.
+    string address = 4;
+    // A pickup point.
+    string pickup_point = 5;
+  }
+}
+
+message CancelOrderRequest {
+  // The order to cancel.
+  string name = 1 [(google.api.field_behavior) = REQUIRED];
+  // Why, for the record.
+  string reason = 2 [(buf.validate.field).string.max_len = 500];
+}

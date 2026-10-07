@@ -1,0 +1,86 @@
+cabal-version:      3.0
+name:               peculiar-rpc-openapi
+version:            0.3.0.0
+synopsis:           The OpenAPI document for an API, from its protobuf descriptors
+license:            MIT
+license-file:       LICENSE
+author:             Peculiar Systems
+maintainer:         contact@peculiar.systems
+category:           Network
+build-type:         Simple
+
+common lang
+    default-language: GHC2021
+    default-extensions:
+        DerivingStrategies
+        DerivingVia
+        DeriveAnyClass
+        GeneralizedNewtypeDeriving
+        LambdaCase
+        MultiWayIf
+        BlockArguments
+        ViewPatterns
+        PatternSynonyms
+        QuasiQuotes
+        ApplicativeDo
+        OverloadedStrings
+        OverloadedLabels
+        OverloadedRecordDot
+        DuplicateRecordFields
+        NoFieldSelectors
+        RecordWildCards
+        NamedFieldPuns
+        TypeFamilies
+        DataKinds
+        FunctionalDependencies
+        UndecidableInstances
+    ghc-options:
+        -Wall
+        -Wcompat
+        -Widentities
+        -Wmissing-export-lists
+        -Wmissing-home-modules
+        -Wmissing-deriving-strategies
+        -Wpartial-fields
+        -Wredundant-constraints
+        -Woperator-whitespace
+        -Wredundant-bang-patterns
+        -Wunused-type-patterns
+        -Wunused-packages
+
+library
+    import:           lang
+    hs-source-dirs:   src
+    exposed-modules:
+        Peculiar.Rpc.OpenApi.Command
+    build-depends:
+        aeson,
+        base >=4.17 && <5,
+        bytestring,
+        containers,
+        lens-family,
+        peculiar-rpc,
+        proto-lens,
+        proto-lens-protobuf-types,
+        text
+
+executable peculiar-rpc-openapi
+    import:           lang
+    hs-source-dirs:   app
+    main-is:          Main.hs
+    build-depends:
+        base,
+        peculiar-rpc-openapi,
+        text
+
+test-suite peculiar-rpc-openapi-test
+    import:           lang
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    build-depends:
+        aeson,
+        base,
+        bytestring,
+        hedgehog,
+        peculiar-rpc-openapi

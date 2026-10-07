@@ -1,0 +1,2 @@
+Duplicate Metadata/HTTPVersion:1/Protocol:PROTOCOL_GRPC_WEB/**/(grpc server impl)/bidi-stream/half-duplex/error-with-no-responses
+Errors/HTTPVersion:1/Protocol:PROTOCOL_GRPC_WEB/**/(grpc server impl)/bidi-stream/half-duplex/error-with-no-responses

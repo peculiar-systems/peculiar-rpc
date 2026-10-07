@@ -1,0 +1,39 @@
+{
+  "name": "peculiar-rpc-website",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Landing and documentation site for peculiar-rpc",
+  "license": "MIT",
+  "author": "Peculiar Systems <contact@peculiar.systems>",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "lint": "oxlint -D all --deny-warnings --type-aware -A one-var -A no-magic-numbers -A prefer-readonly-parameter-types -A no-undefined -A sort-imports -A sort-keys -A no-optional-chaining -A no-ternary -A no-nested-ternary -A no-rest-spread-properties -A no-async-await -A no-await-in-loop -A prefer-destructuring -A prefer-named-capture-group -A max-statements -A max-lines -A max-params -A max-nested-calls -A id-length -A no-array-reduce -A no-array-callback-reference -A default-case -A no-null -A new-cap -A import-style -A no-await-expression-member -A no-useless-undefined -A explicit-function-return-type -A explicit-member-accessibility -A promise-function-async -A consistent-indexed-object-style -A filename-case -A explicit-module-boundary-types -A max-lines-per-function src plugins vite.config.ts",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
+  },
+  "dependencies": {
+    "preact": "^10.28.0",
+    "preact-iso": "^2.12.2"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.0",
+    "@types/babel__core": "^7.20.5",
+    "@types/node": "^26.6.3",
+    "@vanilla-extract/css": "^1.17.0",
+    "@vanilla-extract/vite-plugin": "^5.1.0",
+    "marked": "^18.0.14",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
+    "oxlint-tsgolint": "^7.0.2003",
+    "preact-render-to-string": "^6.6.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
