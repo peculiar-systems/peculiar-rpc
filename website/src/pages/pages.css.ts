@@ -1,4 +1,4 @@
-import { style } from "@vanilla-extract/css";
+import { globalStyle, style } from "@vanilla-extract/css";
 import { vars } from "../app/theme.css.ts";
 
 export const article = style({
@@ -85,3 +85,24 @@ export const pager = style({
   fontSize: "14.5px",
   color: vars.color.violetInk,
 });
+
+export const wire = style({
+  display: "block",
+  width: "fit-content",
+  maxWidth: "100%",
+  margin: "0 auto 28px",
+  textAlign: "left",
+  background: vars.color.codeBg,
+  color: vars.color.codeInk,
+  borderRadius: "14px",
+  padding: "20px 22px",
+  lineHeight: 1.5,
+  overflow: "hidden",
+  boxShadow: vars.shadowSm,
+});
+
+globalStyle(`${wire} .b`, { color: vars.color.codeInk });
+globalStyle(`${wire} .d`, { color: "oklch(0.72 0.01 270)" });
+globalStyle(`${wire} .v`, { color: "oklch(0.76 0.15 296)" });
+globalStyle(`${wire} .l`, { color: vars.color.lime });
+globalStyle(`${wire} .m`, { color: "oklch(0.76 0.16 355)" });
