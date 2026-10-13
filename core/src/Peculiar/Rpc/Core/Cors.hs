@@ -8,8 +8,10 @@ module Peculiar.Rpc.Core.Cors
   , exposedHeaders
   ) where
 
+import Control.Monad (guard)
 import Data.ByteString qualified as BS
 import Data.ByteString.Char8 qualified as BC
+import Data.Char (isAlphaNum, isAscii)
 import Data.Maybe (isJust)
 import Peculiar.Rpc.Core.Headers (lookupHeader)
 import Peculiar.Rpc.Core.Trailers (Header)
@@ -50,8 +52,27 @@ allowed cors headers = do
   case cors.origins of
     AnyOrigin -> Just (if cors.credentials then origin else "*")
     OnlyOrigins list
-      | origin `elem` list -> Just origin
+      | any (`matches` origin) list -> Just origin
       | otherwise -> Nothing
+
+matches :: BS.ByteString -> BS.ByteString -> Bool
+matches entry origin = case wildcard entry of
+  Just (scheme, suffix) -> any labels (BS.stripPrefix scheme origin >>= BS.stripSuffix suffix)
+  Nothing -> entry == origin
+
+wildcard :: BS.ByteString -> Maybe (BS.ByteString, BS.ByteString)
+wildcard entry = do
+  let (scheme, rest) = BS.breakSubstring "://" entry
+  suffix <- BS.stripPrefix "://*" rest
+  host <- BS.stripPrefix "." (BC.takeWhile (/= ':') suffix)
+  guard (labels host && BC.notElem '*' (scheme <> suffix))
+  pure (scheme <> "://", suffix)
+
+labels :: BS.ByteString -> Bool
+labels host = not (BS.null host) && all label (BC.split '.' host)
+ where
+  label part = not (BS.null part) && BC.all character part
+  character c = isAscii c && (isAlphaNum c || c == '-' || c == '_')
 
 vary :: Cors -> [Header]
 vary cors = case cors.origins of

@@ -83,6 +83,7 @@ test-suite peculiar-rpc-core-test
     other-modules:
         Test.Peculiar.Rpc.Core.Base64
         Test.Peculiar.Rpc.Core.Connect
+        Test.Peculiar.Rpc.Core.Cors
         Test.Peculiar.Rpc.Core.Frame
         Test.Peculiar.Rpc.Core.Gen
         Test.Peculiar.Rpc.Core.Response

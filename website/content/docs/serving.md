@@ -124,7 +124,7 @@ Native gRPC needs HTTP/2: over HTTP/1.1 its trailers, and so its status, can't b
 
 ## Browsers and limits
 
-- **CORS.** `Just Rpc.permissive` answers preflights from any origin and exposes the headers gRPC-Web and Connect clients read (`grpc-status`, `grpc-message`, `grpc-status-details-bin`, the encodings). Use `Rpc.Cors{origins = Rpc.OnlyOrigins [...], credentials, maxAgeSeconds, expose}` to narrow it. Without it, a browser on another origin can't read a single status.
+- **CORS.** `Just Rpc.permissive` answers preflights from any origin and exposes the headers gRPC-Web and Connect clients read (`grpc-status`, `grpc-message`, `grpc-status-details-bin`, the encodings). Use `Rpc.Cors{origins = Rpc.OnlyOrigins [...], credentials, maxAgeSeconds, expose}` to narrow it; an entry is one exact origin, or `https://*.example.org` to allow every subdomain of a domain (the domain itself is not included). Without it, a browser on another origin can't read a single status.
 - **Receive limit.** Applies to every protocol, native gRPC included, and is checked against the _decompressed_ size. gzip and deflate messages are inflated with the output capped one byte past the limit, so a compression bomb costs at most the limit. A message over it ends the call with `RESOURCE_EXHAUSTED`.
 - **Header limit.** `headerLimit`, 16 KiB by default, refuses a request whose headers are larger with `RESOURCE_EXHAUSTED` in its own protocol. Past 50 KiB warp and the http2 package close the connection before the request reaches the service, and HTTP/2 also refuses any single value over 4 KiB.
 - **Connect GET** is allowed for methods marked `NO_SIDE_EFFECTS`, read from the service descriptors.

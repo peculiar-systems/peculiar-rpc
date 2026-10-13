@@ -5,6 +5,7 @@ import Hedgehog (checkParallel)
 import System.Exit (exitFailure)
 import Test.Peculiar.Rpc.Core.Base64 qualified as Base64
 import Test.Peculiar.Rpc.Core.Connect qualified as Connect
+import Test.Peculiar.Rpc.Core.Cors qualified as Cors
 import Test.Peculiar.Rpc.Core.Frame qualified as Frame
 import Test.Peculiar.Rpc.Core.Response qualified as Response
 import Test.Peculiar.Rpc.Core.Status qualified as Status
@@ -18,6 +19,7 @@ main = do
       checkParallel
       [ Base64.tests
       , Connect.tests
+      , Cors.tests
       , Frame.tests
       , Response.tests
       , Status.tests

@@ -292,8 +292,10 @@ from the environment to an `Interceptor`.
 For browsers:
 
 - Set `cors`: `Just Rpc.permissive` in development, `Rpc.Cors{origins =
-  Rpc.OnlyOrigins [...], ...}` in production. Without it a browser on another
-  origin cannot read a single status.
+  Rpc.OnlyOrigins [...], ...}` in production. An entry is one exact origin, or
+  `https://*.example.org` for every subdomain of a domain (the domain itself
+  not included). Without it a browser on another origin cannot read a single
+  status.
 - A browser can only make unary and server-streaming calls. Add
   `Rpc.BrowserReachable Orders` to a signature to make any other kind a type
   error that names the method.
